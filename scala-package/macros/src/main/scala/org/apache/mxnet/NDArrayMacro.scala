@@ -191,6 +191,7 @@ private[mxnet] object NDArrayMacro extends GeneratorBase {
     // determine what target to call
     val arg = function.listOfArgs.filter(arg => arg.argType == "Any").head
     if(arg.isOptional) {
+      // FIXME case None does not make sense
       impl +=
         s"""val target = ${arg.safeArgName} match {
            |   case Some(a:$arrayType) => "sample_${function.name}"
@@ -231,6 +232,9 @@ private[mxnet] object NDArrayMacro extends GeneratorBase {
     var finalStr = s"def ${function.name}"
     finalStr += s" (${argDef.mkString(",")}) : $returnType"
     finalStr += s" = {${impl.mkString("\n")}}"
+
+    println(finalStr)
+
     c.parse(finalStr).asInstanceOf[DefDef]
   }
 

@@ -186,6 +186,7 @@ private[mxnet] object SymbolImplMacros extends GeneratorBase {
     // determine what target to call
     val arg = function.listOfArgs.filter(arg => arg.argType == "Any").head
     if(arg.isOptional) {
+      // FIXME case None does not make sense
       impl +=
         s"""val target = ${arg.safeArgName} match {
            |   case Some(s:$symbolType) => "sample_${function.name}"
